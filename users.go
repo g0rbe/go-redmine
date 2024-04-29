@@ -53,9 +53,13 @@ func (u *Users) ToYAML() string {
 
 	return string(v)
 }
-func (r *Redmine) Users() (*Users, error) {
+func (r *Redmine) Users(filter string) (*Users, error) {
 
-	code, body, err := r.auth.Request("GET", "/users.json", nil)
+	if len(filter) > 0 && filter[0] != '?' {
+		filter = "?" + filter
+	}
+
+	code, body, err := r.auth.Request("GET", "/users.json"+filter, nil)
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
