@@ -24,15 +24,15 @@ func (i *Issues) ToTable() string {
 	for n := range i.Issues {
 		tw.AppendRow(
 			table.Row{
-				i.Issues[n].ID, i.Issues[n].Project, i.Issues[n].Tracker.Name, i.Issues[n].Status, i.Issues[n].Priority,
+				i.Issues[n].ID, i.Issues[n].Project.Name, i.Issues[n].Tracker.Name, i.Issues[n].Status.Name, i.Issues[n].Priority.Name,
 				i.Issues[n].Subject, i.Issues[n].StartDate, i.Issues[n].DueDate, i.Issues[n].TotalSpentHours,
 			},
 			table.RowConfig{AutoMerge: true})
 	}
 
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "Total", i.TotalCount})
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "Offset", i.Offset})
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "Limit", i.Limit})
+	tw.AppendFooter(table.Row{"", "", "", "", "", "", "", "Total", i.TotalCount})
+	tw.AppendFooter(table.Row{"", "", "", "", "", "", "", "Offset", i.Offset})
+	tw.AppendFooter(table.Row{"", "", "", "", "", "", "", "Limit", i.Limit})
 
 	return tw.Render()
 }
