@@ -30,6 +30,24 @@ func (us UserStatus) String() string {
 	}
 }
 
+type MailNotification string
+
+const (
+	MailNotificationAll  MailNotification = "all"
+	MailNotificationNone MailNotification = "none"
+)
+
+func (m MailNotification) String() string {
+	switch m {
+	case "all":
+		return "For any event on all my projects"
+	case "none":
+		return "No events"
+	default:
+		return string(m)
+	}
+}
+
 type User struct {
 	ID              int           `json:"id,omitempty" yaml:"id,omitempty"`
 	Login           string        `json:"login,omitempty" yaml:"login,omitempty"`
@@ -48,6 +66,12 @@ type User struct {
 	CustomField     []CustomField `json:"custom_fields,omitempty" yaml:"custom_fields,omitempty"`
 	Groups          []Group       `json:"groups,omitempty" yaml:"groups,omitempty"`
 	// Memberships
+
+	// CreateUser fields
+	AuthSourceId       int              `json:"auth_source_id,omitempty" yaml:"auth_source_id,omitempty"`
+	MailNotification   MailNotification `json:"mail_notification,omitempty" yaml:"mail_notification,omitempty"`
+	MustChangePassword bool             `json:"must_change_passwd,omitempty" yaml:"must_change_passwd,omitempty"`
+	GeneratePassword   bool             `json:"generate_password,omitempty" yaml:"generate_password,omitempty"`
 }
 
 func (u User) String() string {
@@ -106,4 +130,126 @@ func (r *Redmine) User(id int) (User, error) {
 	}
 
 	return v.User, nil
+}
+
+// CreateUser creates a new user.
+//
+// Required fields: Login, Firstname, Lastname and Mail
+//
+// If notify is true, sends account information to the user.
+// If user created, the underlying data of u will be replaced by the returned user.
+func (r *Redmine) CreateUser(u *User, notify bool) error {
+
+	if u == nil {
+		return fmt.Errorf("user is nil")
+	}
+	if u.Login == "" {
+		return ErrLoginEmpty
+	}
+	if u.FirstName == "" {
+		return ErrLastnameEmpty
+	}
+	if u.LastName == "" {
+		return ErrLastnameEmpty
+	}
+	if u.Mail == "" {
+		return ErrMailEmpty
+	}
+
+	nu := struct {
+		User            *User `json:"user"`
+		SendInformation bool  `json:"send_information"`
+	}{
+		User:            u,
+		SendInformation: notify,
+	}
+
+	code, body, err := r.auth.Request("POST", "/users.json", &nu)
+	if err != nil {
+		return fmt.Errorf("request failed: %w", err)
+	}
+
+	if code == 422 {
+		return fmt.Errorf("%w %s", ErrUnprocessableEntity, body)
+	}
+	if code != 201 {
+		return fmt.Errorf("(%d) %s", code, body)
+	}
+
+	v := struct {
+		User User `json:"user"`
+	}{}
+
+	err = json.Unmarshal(body, &v)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	*u = v.User
+
+	return nil
+}
+
+// UpdateUser modify a user.
+//
+// Required fields: ID, Login, Firstname, Lastname and Mail
+//
+// If notify is true, sends account information to the user.
+func (r *Redmine) UpdateUser(u *User, notify bool) error {
+
+	if u == nil {
+		return fmt.Errorf("user is nil")
+	}
+	if u.ID == 0 {
+		return ErrIDEmpty
+	}
+	if u.Login == "" {
+		return ErrLoginEmpty
+	}
+	if u.FirstName == "" {
+		return ErrLastnameEmpty
+	}
+	if u.LastName == "" {
+		return ErrLastnameEmpty
+	}
+	if u.Mail == "" {
+		return ErrMailEmpty
+	}
+
+	nu := struct {
+		User            *User `json:"user"`
+		SendInformation bool  `json:"send_information"`
+	}{
+		User:            u,
+		SendInformation: notify,
+	}
+
+	code, body, err := r.auth.Request("PUT", fmt.Sprintf("/users/%d.json", u.ID), &nu)
+	if err != nil {
+		return fmt.Errorf("request failed: %w", err)
+	}
+
+	if code == 422 {
+		return fmt.Errorf("%w %s", ErrUnprocessableEntity, body)
+	}
+	if code != 204 {
+		return fmt.Errorf("(%d) %s", code, body)
+	}
+
+	return nil
+}
+
+// DeleteUser remves a user with the given id.
+func (r *Redmine) DeleteUser(id int) error {
+
+	code, body, err := r.auth.Request("DELETE", fmt.Sprintf("/users/%d.json", id), nil)
+	if err != nil {
+		return fmt.Errorf("request failed: %w", err)
+	}
+
+	if code != 204 {
+		return fmt.Errorf("(%d) %s", code, body)
+	}
+
+	return nil
 }
