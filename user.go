@@ -96,8 +96,6 @@ func (r *Redmine) User(id int) (User, error) {
 		return User{}, fmt.Errorf("(%d) %s", code, body)
 	}
 
-	fmt.Printf("%s\n", body)
-
 	v := struct {
 		User User `json:"user"`
 	}{}
