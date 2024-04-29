@@ -22,8 +22,8 @@ type Issue struct {
 	IsPrivate   bool     `json:"is_private"`
 	//EstimatedHours
 	//TotalEstimatedHours
-	SpentHours      int           `json:"spent_hours"`
-	TotalSpentHours int           `json:"total_spent_hours"`
+	SpentHours      float64       `json:"spent_hours"`
+	TotalSpentHours float64       `json:"total_spent_hours"`
 	CreatedOn       time.Time     `json:"created_on"`
 	UpdatedOn       time.Time     `json:"updated_on"`
 	ClosedOn        time.Time     `json:"closed_on"`
