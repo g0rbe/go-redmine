@@ -8,7 +8,7 @@ import (
 
 func TestIssues(t *testing.T) {
 
-	issues, err := redmine.NewRedmine(redmine.NewPublic("https://www.redmine.org")).Issues("", 0, 0)
+	issues, err := redmine.NewPublic("https://www.redmine.org").Issues("", 0, 0)
 	if err != nil {
 		t.Fatalf("%s\n", err)
 	}

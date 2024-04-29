@@ -4,29 +4,29 @@ import (
 	"gorbe.io/go/redmine"
 )
 
-func ExampleNewRedmine_newPublic() {
+func ExampleNewPublic() {
 
-	_ = redmine.NewRedmine(redmine.NewPublic("https://www.redmine.org"))
+	_ = redmine.NewPublic("https://www.redmine.org")
 
 }
 
-func ExampleNewRedmine_newRegularLogin() {
+func ExampleNewRegularLogin() {
 
 	// admin1 user impersonates admin2
-	_ = redmine.NewRedmine(redmine.NewRegularLogin("https://www.redmine.org", "admin1", "password", "admin2"))
+	_ = redmine.NewRegularLogin("https://www.redmine.org", "admin1", "password", "admin2")
 
 }
 
-func ExampleNewRedmine_newAuthKey() {
+func ExampleNewAuthKey() {
 
 	// User of apikey impersonates admin2 if user is admin
-	_ = redmine.NewRedmine(redmine.NewAuthKey("https://www.redmine.org", "apikey", "admin2"))
+	_ = redmine.NewAuthKey("https://www.redmine.org", "apikey", "admin2")
 
 }
 
-func ExampleNewRedmine_newHeaderKey() {
+func ExampleNewHeaderKey() {
 
 	// User of apikey impersonates admin2 if user is admin
-	_ = redmine.NewRedmine(redmine.NewHeaderKey("https://www.redmine.org", "apikey", "admin2"))
+	_ = redmine.NewHeaderKey("https://www.redmine.org", "apikey", "admin2")
 
 }

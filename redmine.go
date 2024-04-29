@@ -18,6 +18,21 @@ type Redmine struct {
 	auth Authenticator
 }
 
-func NewRedmine(a Authenticator) *Redmine {
-	return &Redmine{auth: a}
+func NewPublic(server string) *Redmine {
+	return &Redmine{auth: &Public{server}}
+}
+
+// NewRegularLogin creates a RegularLogin instance.
+//
+// If the parameter "become" is set to a username, then the request includes the "X-Redmine-Switch-User: user" header to impersonate the given user.
+func NewRegularLogin(server, login, password, become string) *Redmine {
+	return &Redmine{auth: &RegularLogin{server, login, password, become}}
+}
+
+func NewAuthKey(server, key, become string) *Redmine {
+	return &Redmine{auth: &AuthKey{server, key, become}}
+}
+
+func NewHeaderKey(server, key, become string) *Redmine {
+	return &Redmine{auth: &HeaderKey{server, key, become}}
 }

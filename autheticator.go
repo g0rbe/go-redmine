@@ -26,10 +26,6 @@ type Public struct {
 	server string // The server URL
 }
 
-func NewPublic(server string) *Public {
-	return &Public{server}
-}
-
 // Request implements the Authenticator interface for Public.
 func (p *Public) Request(method string, url string, body any) (int, []byte, error) {
 
@@ -71,13 +67,6 @@ type RegularLogin struct {
 	login    string // User login name
 	password string // User login password
 	become   string // The target user's name for user impoersonation with X-Redmine-Switch-User
-}
-
-// NewRegularLogin creates a RegularLogin instance.
-//
-// If the parameter "become" is set to a username, then the request includes the "X-Redmine-Switch-User: user" header to impersonate the given user.
-func NewRegularLogin(server, login, password, become string) *RegularLogin {
-	return &RegularLogin{server, login, password, become}
 }
 
 func (rl *RegularLogin) Request(method string, url string, body any) (int, []byte, error) {
@@ -127,10 +116,6 @@ type AuthKey struct {
 	become string // The target user's name for user impoersonation with X-Redmine-Switch-User
 }
 
-func NewAuthKey(server, key, become string) *AuthKey {
-	return &AuthKey{server, key, become}
-}
-
 func (ak *AuthKey) Request(method string, url string, body any) (int, []byte, error) {
 
 	var bodyReader io.Reader = nil
@@ -176,10 +161,6 @@ type HeaderKey struct {
 	server string // Server URL
 	key    string // User API key
 	become string // The target user's name for user impoersonation with X-Redmine-Switch-User
-}
-
-func NewHeaderKey(server, key, become string) *HeaderKey {
-	return &HeaderKey{server, key, become}
 }
 
 func (hk *HeaderKey) Request(method string, url string, body any) (int, []byte, error) {
