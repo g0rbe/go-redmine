@@ -28,7 +28,7 @@ func ExampleIssues_withParameter() {
 
 func TestIssues(t *testing.T) {
 
-	issues, err := redmine.NewPublic("https://www.redmine.org").Issues("", 0, 0)
+	issues, err := redmine.NewPublic("https://www.redmine.org").Issues()
 	if err != nil {
 		t.Fatalf("%s\n", err)
 	}

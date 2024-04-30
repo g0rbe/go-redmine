@@ -77,16 +77,9 @@ func (i *Issues) MustToYAML() string {
 	return v
 }
 
-func (r *Redmine) Issues(filter string, limit int, offset int) (*Issues, error) {
+func (r *Redmine) Issues(params ...Parameter) (*Issues, error) {
 
-	if limit == 0 {
-		limit = 25
-	}
-
-	if filter != "" {
-		filter += "&"
-	}
-	code, body, err := r.auth.Request("GET", fmt.Sprintf("/issues.json?%slimit=%d&offset=%d", filter, limit, offset), nil)
+	code, body, err := r.auth.Request("GET", "/issues.json"+ParseParameters(params...), nil)
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
