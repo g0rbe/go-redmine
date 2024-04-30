@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/jedib0t/go-pretty/v6/table"
 	"gopkg.in/yaml.v3"
 )
 
@@ -15,66 +14,30 @@ type Issues struct {
 	Limit      int     `json:"limit,omitempty" yaml:"limit,omitempty"`
 }
 
-func (i *Issues) ToTable() string {
-
-	tw := table.NewWriter()
-
-	tw.AppendHeader(table.Row{"#", "Project", "Tracker", "Status", "Priority", "Subject", "Start Date", "Due Date", "Total Spent Hours"}, table.RowConfig{AutoMerge: true})
-
-	for n := range i.Issues {
-		tw.AppendRow(
-			table.Row{
-				i.Issues[n].ID, i.Issues[n].Project.Name, i.Issues[n].Tracker.Name, i.Issues[n].Status.Name, i.Issues[n].Priority.Name,
-				i.Issues[n].Subject, i.Issues[n].StartDate, i.Issues[n].DueDate, i.Issues[n].TotalSpentHours,
-			},
-			table.RowConfig{AutoMerge: true})
-	}
-
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "", "Total", i.TotalCount})
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "", "Offset", i.Offset})
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "", "Limit", i.Limit})
-
-	return tw.Render()
-}
-
-func (i *Issues) ToJSON() (string, error) {
+// JSON encodes Issues to JSON.
+//
+// If marshaling fails for any reason, this function panics.
+func (i *Issues) JSON() string {
 
 	v, err := json.Marshal(i)
-	if err != nil {
-		return "", (fmt.Errorf("failed to marshal Issues to JSON: %w", err))
-	}
-
-	return string(v), nil
-}
-
-func (i *Issues) MustToJSON() string {
-
-	v, err := i.ToJSON()
 	if err != nil {
 		panic(fmt.Errorf("failed to marshal Issues to JSON: %w", err))
 	}
 
-	return v
+	return string(v)
 }
 
-func (i *Issues) ToYAML() (string, error) {
+// YAML encodes Issues to YAML.
+//
+// If marshaling fails for any reason, this function panics.
+func (i *Issues) YAML() string {
 
 	v, err := yaml.Marshal(i)
-	if err != nil {
-		return "", (fmt.Errorf("failed to marshal Issues to YAML: %w", err))
-	}
-
-	return string(v), nil
-}
-
-func (i *Issues) MustToYAML() string {
-
-	v, err := i.ToYAML()
 	if err != nil {
 		panic(fmt.Errorf("failed to marshal Issues to YAML: %w", err))
 	}
 
-	return v
+	return string(v)
 }
 
 func (r *Redmine) Issues(params ...Parameter) (*Issues, error) {

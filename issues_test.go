@@ -33,5 +33,5 @@ func TestIssues(t *testing.T) {
 		t.Fatalf("%s\n", err)
 	}
 
-	t.Logf("%s\n", issues.MustToJSON())
+	t.Logf("%s\n", issues.JSON())
 }

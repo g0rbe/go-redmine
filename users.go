@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/jedib0t/go-pretty/v6/table"
 	"gopkg.in/yaml.v3"
 )
 
@@ -15,26 +14,10 @@ type Users struct {
 	Limit      int    `json:"limit,omitempty" yaml:"limit,omitempty"`
 }
 
-func (u *Users) ToTable() string {
-
-	tw := table.NewWriter()
-
-	tw.AppendHeader(table.Row{"#", "Login", "First Name", "Last Name", "Mail", "Last Login", "Admin", "Status"}, table.RowConfig{AutoMerge: true})
-
-	for i := range u.Users {
-		tw.AppendRow(table.Row{u.Users[i].ID, u.Users[i].Login, u.Users[i].FirstName, u.Users[i].LastName, u.Users[i].Mail, u.Users[i].LastLoginOn.Local(), u.Users[i].Admin, u.Users[i].Status.String()}, table.RowConfig{AutoMerge: true})
-	}
-
-	tw.AppendSeparator()
-
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "Total", u.TotalCount})
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "Offset", u.Offset})
-	tw.AppendFooter(table.Row{"", "", "", "", "", "", "Limit", u.Limit})
-
-	return tw.Render()
-}
-
-func (u *Users) ToJSON() string {
+// JSON encodes Users to JSON.
+//
+// If marshaling fails for any reason, this function panics.
+func (u *Users) JSON() string {
 
 	v, err := json.Marshal(u)
 	if err != nil {
@@ -44,7 +27,10 @@ func (u *Users) ToJSON() string {
 	return string(v)
 }
 
-func (u *Users) ToYAML() string {
+// YAML encodes Users to YAML.
+//
+// If marshaling fails for any reason, this function panics.
+func (u *Users) YAML() string {
 
 	v, err := yaml.Marshal(u)
 	if err != nil {
