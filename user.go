@@ -12,9 +12,9 @@ import (
 type UserStatus int
 
 const (
-	UserActive     UserStatus = 0
-	UserRegistered UserStatus = 1
-	UserLocked     UserStatus = 2
+	UserActive     UserStatus = 1
+	UserRegistered UserStatus = 2
+	UserLocked     UserStatus = 3
 )
 
 // ParseUserStatus converts user status string v to UserStatus.
