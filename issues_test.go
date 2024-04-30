@@ -6,6 +6,26 @@ import (
 	"gorbe.io/go/redmine"
 )
 
+func ExampleIssues() {
+
+	issues, err := redmine.NewPublic("https://www.redmine.org").Issues()
+	if err != nil {
+		// handle error
+	}
+
+	fmt.Printf("%#v", issues)
+}
+
+func ExampleIssues_withParameter() {
+
+	issues, err := redmine.NewPublic("https://www.redmine.org").Issues(redmine.OffsetParameter(100), redmine.LimitParameter(100))
+	if err != nil {
+		// handle error
+	}
+
+	fmt.Printf("%#v", issues)
+}
+
 func TestIssues(t *testing.T) {
 
 	issues, err := redmine.NewPublic("https://www.redmine.org").Issues("", 0, 0)
