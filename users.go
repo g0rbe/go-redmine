@@ -39,7 +39,6 @@ func (u *Users) YAML() string {
 
 	return string(v)
 }
-func (r *Redmine) Users(filter string) (*Users, error) {
 
 func (r *Redmine) Users(params ...Parameter) (*Users, error) {
 
