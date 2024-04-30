@@ -1,6 +1,7 @@
 package redmine_test
 
 import (
+	"fmt"
 	"testing"
 
 	"gorbe.io/go/redmine"
