@@ -17,6 +17,21 @@ const (
 	UserLocked     UserStatus = 2
 )
 
+// ParseUserStatus converts user status string v to UserStatus.
+// Returns -1 if v is not a valid user status.
+func ParseUserStatus(v string) UserStatus {
+	switch v {
+	case "active":
+		return UserActive
+	case "registered":
+		return UserRegistered
+	case "locked":
+		return UserLocked
+	default:
+		return -1
+	}
+}
+
 func (us UserStatus) String() string {
 	switch us {
 	case UserActive:
