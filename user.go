@@ -101,7 +101,8 @@ func (u User) ToJSON() []byte {
 // If id is 0, then returns the current user
 func (r *Redmine) User(id int) (User, error) {
 
-	var idStr string
+	idStr := strconv.Itoa(id)
+
 	if id == 0 {
 		idStr = "current"
 	} else {
