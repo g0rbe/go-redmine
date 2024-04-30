@@ -105,8 +105,6 @@ func (r *Redmine) User(id int) (User, error) {
 
 	if id == 0 {
 		idStr = "current"
-	} else {
-		idStr = strconv.Itoa(id)
 	}
 
 	code, body, err := r.auth.Request("GET", fmt.Sprintf("/users/%s.json", idStr), nil)
