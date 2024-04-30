@@ -66,6 +66,7 @@ func (m MailNotification) String() string {
 type User struct {
 	ID              int           `json:"id,omitempty" yaml:"id,omitempty"`
 	Login           string        `json:"login,omitempty" yaml:"login,omitempty"`
+	Password        string        `json:"password,omitempty" yaml:"password,omitempty"`
 	Admin           bool          `json:"admin,omitempty" yaml:"admin,omitempty"`
 	FirstName       string        `json:"firstname,omitempty" yaml:"firstname,omitempty"`
 	LastName        string        `json:"lastname,omitempty" yaml:"lastname,omitempty"`
