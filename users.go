@@ -63,6 +63,18 @@ func (u *Users) YAML() string {
 	return string(v)
 }
 
+// Logins returns a slice of users login names.
+func (u *Users) Logins() []string {
+
+	v := make([]string, 0, len(u.Users))
+
+	for i := range u.Users {
+		v = append(v, u.Users[i].Login)
+	}
+
+	return v
+}
+
 func (r *Redmine) Users(params ...Parameter) (*Users, error) {
 
 	code, body, err := r.auth.Request("GET", "/users.json"+ParseParameters(params...), nil)
