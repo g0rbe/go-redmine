@@ -14,6 +14,25 @@ type Issues struct {
 	Limit      int     `json:"limit,omitempty" yaml:"limit,omitempty"`
 }
 
+func (i *Issues) String() string {
+
+	var v string
+
+	for n := range i.Issues {
+		v += fmt.Sprintf("%s\n", i.Issues[n].String())
+	}
+
+	if len(i.Issues) > 0 {
+		v += "\n"
+	}
+
+	v += fmt.Sprintf("Total: %d\n", i.TotalCount)
+	v += fmt.Sprintf("Offset: %d\n", i.Offset)
+	v += fmt.Sprintf("Limit: %d", i.Limit)
+
+	return v
+}
+
 // JSON encodes Issues to JSON.
 //
 // If marshaling fails for any reason, this function panics.
