@@ -13,3 +13,21 @@ type Project struct {
 	IsPublic    bool      `json:"is_public"`
 	Homepage    string    `json:"homepage"`
 }
+
+// ProjectWithIdentifier returns the Project with the given Identifier identifier.
+// If no project found, returns nil.
+func (r *Redmine) ProjectWithIdentifier(identifier string) (*Project, error) {
+
+	projects, err := r.Projects(NameParameter(identifier))
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range projects.Projects {
+		if projects.Projects[i].Identifier == identifier {
+			return &projects.Projects[i], nil
+		}
+	}
+
+	return nil, nil
+}
