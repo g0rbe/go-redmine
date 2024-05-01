@@ -31,7 +31,7 @@ type Issue struct {
 }
 
 func (i *Issue) String() string {
-	return fmt.Sprintf("%s - %s #%d: %s", i.Project.Name, i.Tracker.Name, i.ID, i.Subject)
+	return fmt.Sprintf("%s %s #%d %s: %s", i.Project.Name, i.Tracker.Name, i.ID, i.Status.Name, i.Subject)
 }
 
 func (r *Redmine) Issue(id int) (*Issue, error) {
