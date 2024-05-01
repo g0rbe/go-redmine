@@ -37,6 +37,10 @@ func (i *Issues) YAML() string {
 		panic(fmt.Errorf("failed to marshal Issues to YAML: %w", err))
 	}
 
+	if v[len(v)-1] == '\n' {
+		v = v[:len(v)-1]
+	}
+
 	return string(v)
 }
 

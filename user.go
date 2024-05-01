@@ -91,27 +91,37 @@ type User struct {
 }
 
 func (u User) String() string {
-	return fmt.Sprintf("#%d %s %s (%s) %s %s", u.ID, u.FirstName, u.LastName, u.Login, u.Mail, u.LastLoginOn)
+
+	userType := "user"
+	if u.Admin {
+		userType = "admin"
+	}
+
+	return fmt.Sprintf("%s %s #%d %s %s (%s) %s %s", u.Status, userType, u.ID, u.Login, u.FirstName, u.LastName, u.Mail, u.LastLoginOn)
 }
 
-func (u User) ToYAML() []byte {
+func (u User) YAML() string {
 
 	v, err := yaml.Marshal(&u)
 	if err != nil {
 		panic(fmt.Errorf("failed to unmarshal user: %w", err))
 	}
 
-	return v
+	if v[len(v)-1] == '\n' {
+		v = v[:len(v)-1]
+	}
+
+	return string(v)
 }
 
-func (u User) ToJSON() []byte {
+func (u User) JSON() string {
 
 	v, err := json.Marshal(&u)
 	if err != nil {
 		panic(fmt.Errorf("failed to unmarshal user: %w", err))
 	}
 
-	return v
+	return string(v)
 }
 
 // If id is 0, then returns the current user
