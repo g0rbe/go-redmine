@@ -13,7 +13,20 @@ type Tracker struct {
 	EnabledStandardFields []string `json:"enabled_standard_fields"`
 }
 
-func (r *Redmine) Trackers() ([]Tracker, error) {
+type Trackers []Tracker
+
+func (t *Trackers) Names() []string {
+
+	v := make([]string, 0, len(*t))
+
+	for i := range *t {
+		v = append(v, (*t)[i].Name)
+	}
+
+	return v
+}
+
+func (r *Redmine) Trackers() (Trackers, error) {
 
 	code, body, err := r.auth.Request("GET", "/trackers.json", nil)
 	if err != nil {
