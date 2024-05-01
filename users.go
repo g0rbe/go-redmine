@@ -14,6 +14,25 @@ type Users struct {
 	Limit      int    `json:"limit,omitempty" yaml:"limit,omitempty"`
 }
 
+func (u *Users) String() string {
+
+	var v string
+
+	for i := range u.Users {
+		v += fmt.Sprintf("%s\n", u.Users[i])
+	}
+
+	if len(u.Users) > 0 {
+		v += "\n"
+	}
+
+	v += fmt.Sprintf("Total: %d\n", u.TotalCount)
+	v += fmt.Sprintf("Offset: %d\n", u.Offset)
+	v += fmt.Sprintf("Limit: %d", u.Limit)
+
+	return v
+}
+
 // JSON encodes Users to JSON.
 //
 // If marshaling fails for any reason, this function panics.
