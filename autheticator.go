@@ -19,6 +19,8 @@ type Authenticator interface {
 	//
 	// Returns the status code and the body bytes.
 	Request(method string, url string, body any) (int, []byte, error)
+
+	Impersonate(name string)
 }
 
 // Public is an instance of a public Redmine server (eg.: www.redmine.org).
@@ -60,6 +62,8 @@ func (p *Public) Request(method string, url string, body any) (int, []byte, erro
 
 	return resp.StatusCode, respBody, nil
 }
+
+func (p *Public) Impersonate(name string) {}
 
 // RegularLogin is authenticates to Redmine with the user's login and password via HTTP Basic Auth.
 type RegularLogin struct {
@@ -109,6 +113,10 @@ func (rl *RegularLogin) Request(method string, url string, body any) (int, []byt
 	return resp.StatusCode, respBody, nil
 }
 
+func (rl *RegularLogin) Impersonate(name string) {
+	rl.become = name
+}
+
 // AuthKey is authenticates to Redmine using the API key passed in as a username with a random password via HTTP Basic Auth
 type AuthKey struct {
 	server string // Server URL
@@ -156,6 +164,10 @@ func (ak *AuthKey) Request(method string, url string, body any) (int, []byte, er
 	return resp.StatusCode, respBody, nil
 }
 
+func (ak *AuthKey) Impersonate(name string) {
+	ak.become = name
+}
+
 // HeaderKey is authenticates to Redmine using the API key passed in "X-Redmine-API-Key" HTTP header.
 type HeaderKey struct {
 	server string // Server URL
@@ -201,4 +213,8 @@ func (hk *HeaderKey) Request(method string, url string, body any) (int, []byte, 
 	}
 
 	return resp.StatusCode, respBody, nil
+}
+
+func (hk *HeaderKey) Impersonate(name string) {
+	hk.become = name
 }

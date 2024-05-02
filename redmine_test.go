@@ -12,21 +12,18 @@ func ExampleNewPublic() {
 
 func ExampleNewRegularLogin() {
 
-	// admin1 user impersonates admin2
-	_ = redmine.NewRegularLogin("https://www.redmine.org", "admin1", "password", "admin2")
+	_ = redmine.NewRegularLogin("https://www.redmine.org", "admin1", "password")
 
 }
 
 func ExampleNewAuthKey() {
 
-	// User of apikey impersonates admin2 if user is admin
-	_ = redmine.NewAuthKey("https://www.redmine.org", "apikey", "admin2")
+	_ = redmine.NewAuthKey("https://www.redmine.org", "apikey")
 
 }
 
 func ExampleNewHeaderKey() {
 
-	// User of apikey impersonates admin2 if user is admin
-	_ = redmine.NewHeaderKey("https://www.redmine.org", "apikey", "admin2")
+	_ = redmine.NewHeaderKey("https://www.redmine.org", "apikey")
 
 }

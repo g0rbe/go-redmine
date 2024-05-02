@@ -31,14 +31,18 @@ func NewPublic(server string) *Redmine {
 // NewRegularLogin creates a RegularLogin instance.
 //
 // If the parameter "become" is set to a username, then the request includes the "X-Redmine-Switch-User: user" header to impersonate the given user.
-func NewRegularLogin(server, login, password, become string) *Redmine {
-	return &Redmine{auth: &RegularLogin{server, login, password, become}}
+func NewRegularLogin(server, login, password string) *Redmine {
+	return &Redmine{auth: &RegularLogin{server: server, login: login, password: password}}
 }
 
-func NewAuthKey(server, key, become string) *Redmine {
-	return &Redmine{auth: &AuthKey{server, key, become}}
+func NewAuthKey(server, key string) *Redmine {
+	return &Redmine{auth: &AuthKey{server: server, key: key}}
 }
 
-func NewHeaderKey(server, key, become string) *Redmine {
-	return &Redmine{auth: &HeaderKey{server, key, become}}
+func NewHeaderKey(server, key string) *Redmine {
+	return &Redmine{auth: &HeaderKey{server: server, key: key}}
+}
+
+func (r *Redmine) Impersonate(name string) {
+	r.auth.Impersonate(name)
 }
