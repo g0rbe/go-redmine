@@ -3,6 +3,7 @@ package redmine
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type Parameter struct {
@@ -39,8 +40,8 @@ func LimitParameter(v int) Parameter {
 	return Parameter{Field: "limit", Value: strconv.Itoa(v)}
 }
 
-func IncludeParameter(v string) Parameter {
-	return Parameter{Field: "include", Value: v}
+func IncludeParameter(v []string) Parameter {
+	return Parameter{Field: "include", Value: strings.Join(v, ",")}
 }
 
 func IssueIDFilter(v int) Parameter {
@@ -57,6 +58,10 @@ func StatusIDFilter(v int) Parameter {
 
 func StatusFilter(v int) Parameter {
 	return Parameter{Field: "status", Value: strconv.Itoa(v)}
+}
+
+func StatusAllFilter() Parameter {
+	return Parameter{Field: "status", Value: "*"}
 }
 
 func NameParameter(v string) Parameter {
