@@ -81,7 +81,7 @@ type User struct {
 	Status          UserStatus    `json:"status,omitempty" yaml:"status,omitempty"`
 	CustomField     []CustomField `json:"custom_fields,omitempty" yaml:"custom_fields,omitempty"`
 	Groups          []Group       `json:"groups,omitempty" yaml:"groups,omitempty"`
-	// Memberships
+	Memberships     []Membership  `json:"memberships,omitempty" yaml:"memberships,omitempty"`
 
 	// CreateUser fields
 	AuthSourceId       int              `json:"auth_source_id,omitempty" yaml:"auth_source_id,omitempty"`
@@ -92,12 +92,16 @@ type User struct {
 
 func (u User) String() string {
 
+	userStatus := ""
+	if u.Status != 0 {
+		userStatus = u.Status.String() + " "
+	}
 	userType := "user"
 	if u.Admin {
 		userType = "admin"
 	}
 
-	return fmt.Sprintf("%s %s #%d %s %s (%s) %s %s", u.Status, userType, u.ID, u.Login, u.FirstName, u.LastName, u.Mail, u.LastLoginOn)
+	return fmt.Sprintf("%s%s #%d %s (%s %s) %s %s", userStatus, userType, u.ID, u.Login, u.FirstName, u.LastName, u.Mail, u.LastLoginOn.Local().Format(time.DateTime))
 }
 
 func (u User) YAML() string {
@@ -125,7 +129,7 @@ func (u User) JSON() string {
 }
 
 // If id is 0, then returns the current user
-func (r *Redmine) User(id int) (User, error) {
+func (r *Redmine) User(id int, params ...Parameter) (User, error) {
 
 	idStr := strconv.Itoa(id)
 
@@ -133,7 +137,7 @@ func (r *Redmine) User(id int) (User, error) {
 		idStr = "current"
 	}
 
-	code, body, err := r.auth.Request("GET", fmt.Sprintf("/users/%s.json", idStr), nil)
+	code, body, err := r.auth.Request("GET", fmt.Sprintf("/users/%s.json%s", idStr, ParseParameters(params...)), nil)
 	if err != nil {
 		return User{}, fmt.Errorf("request failed: %w", err)
 	}
@@ -155,6 +159,24 @@ func (r *Redmine) User(id int) (User, error) {
 	}
 
 	return v.User, nil
+}
+
+// UserWithName returns the User with the given Name.
+// If no User found with Name name, returns nil.
+func (r *Redmine) UserWithLogin(login string) (*User, error) {
+
+	usrs, err := r.Users(StatusAllFilter(), NameParameter(login))
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range usrs.Users {
+		if usrs.Users[i].Login == login {
+			return &usrs.Users[i], nil
+		}
+	}
+
+	return nil, nil
 }
 
 // CreateUser creates a new user.
