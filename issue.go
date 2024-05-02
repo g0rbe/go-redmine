@@ -7,27 +7,28 @@ import (
 )
 
 type Issue struct {
-	ID          int      `json:"id"`
-	Project     Project  `json:"project"`
-	Tracker     Tracker  `json:"tracker"`
-	Status      Status   `json:"status"`
-	Priority    Priority `json:"priority"`
-	Author      Author   `json:"author"`
-	Category    Category `json:"category"`
-	Subject     string   `json:"subject"`
-	Description string   `json:"description"`
-	StartDate   string   `json:"start_date"`
-	DueDate     string   `json:"due_date"`
-	DoneRation  int      `json:"done_ratio"`
-	IsPrivate   bool     `json:"is_private"`
-	//EstimatedHours
-	//TotalEstimatedHours
-	SpentHours      float64       `json:"spent_hours"`
-	TotalSpentHours float64       `json:"total_spent_hours"`
-	CreatedOn       time.Time     `json:"created_on"`
-	UpdatedOn       time.Time     `json:"updated_on"`
-	ClosedOn        time.Time     `json:"closed_on"`
-	CustomFields    []CustomField `json:"custom_fields"`
+	ID                  int           `json:"id,omitempty" yaml:"id,omitempty"`
+	Project             *Project      `json:"project,omitempty" yaml:"project,omitempty"`
+	Tracker             *Tracker      `json:"tracker,omitempty" yaml:"tracker,omitempty"`
+	Status              *IssueStatus  `json:"status,omitempty" yaml:"status,omitempty"`
+	Priority            *Priority     `json:"priority,omitempty" yaml:"priority,omitempty"`
+	Author              *Author       `json:"author,omitempty" yaml:"author,omitempty"`
+	AssignedTo          *User         `json:"assigned_to,omitempty" yaml:"assigned_to,omitempty"`
+	Category            *Category     `json:"category,omitempty" yaml:"category,omitempty"`
+	Subject             string        `json:"subject,omitempty" yaml:"subject,omitempty"`
+	Description         string        `json:"description,omitempty" yaml:"description,omitempty"`
+	StartDate           string        `json:"start_date,omitempty" yaml:"start_date,omitempty"`
+	DueDate             string        `json:"due_date,omitempty" yaml:"due_date,omitempty"`
+	DoneRation          int           `json:"done_ratio,omitempty" yaml:"done_ratio,omitempty"`
+	IsPrivate           bool          `json:"is_private,omitempty" yaml:"is_private,omitempty"`
+	SpentHours          float64       `json:"spent_hours,omitempty" yaml:"spent_hours,omitempty"`
+	TotalSpentHours     float64       `json:"total_spent_hours,omitempty" yaml:"total_spent_hours,omitempty"`
+	CreatedOn           *time.Time    `json:"created_on,omitempty" yaml:"created_on,omitempty"`
+	UpdatedOn           *time.Time    `json:"updated_on,omitempty" yaml:"updated_on,omitempty"`
+	ClosedOn            *time.Time    `json:"closed_on,omitempty" yaml:",omitempty"`
+	CustomFields        []CustomField `json:"custom_fields,omitempty" yaml:"custom_fields,omitempty"`
+	EstimatedHours      float64       `json:"estimated_hours,omitempty" yaml:"estimated_hours,omitempty"`
+	TotalEstimatedHours float64       `json:"total_estimated_hours,omitempty" yaml:"total_estimated_hours,omitempty"`
 }
 
 func (i *Issue) String() string {
