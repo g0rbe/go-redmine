@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"gopkg.in/yaml.v3"
 )
 
 type Issue struct {
@@ -33,6 +35,30 @@ type Issue struct {
 
 func (i *Issue) String() string {
 	return fmt.Sprintf("%s %s %s #%d: %s", i.Status.Name, i.Project.Name, i.Tracker.Name, i.ID, i.Subject)
+}
+
+func (i *Issue) YAML() string {
+
+	v, err := yaml.Marshal(i)
+	if err != nil {
+		panic(fmt.Errorf("failed to unmarshal Issue: %w", err))
+	}
+
+	if v[len(v)-1] == '\n' {
+		v = v[:len(v)-1]
+	}
+
+	return string(v)
+}
+
+func (i *Issue) JSON() string {
+
+	v, err := json.Marshal(i)
+	if err != nil {
+		panic(fmt.Errorf("failed to unmarshal Issue: %w", err))
+	}
+
+	return string(v)
 }
 
 func (r *Redmine) Issue(id int) (*Issue, error) {
