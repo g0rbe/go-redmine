@@ -9,7 +9,7 @@ import (
 
 func TestTrackers(t *testing.T) {
 
-	v, err := redmine.NewAuthKey(os.Getenv("REDMINE_SERVER"), os.Getenv("REDMINE_KEY"), "").Trackers()
+	v, err := redmine.NewAuthKey(os.Getenv("REDMINE_SERVER"), os.Getenv("REDMINE_KEY")).Trackers()
 	if err != nil {
 		t.Fatalf("%s\n", err)
 	}

@@ -6,11 +6,11 @@ import (
 )
 
 type Tracker struct {
-	ID                    int      `json:"id"`
-	Name                  string   `json:"name"`
-	DefaultStatus         Status   `json:"default_status"`
-	Description           string   `json:"description"`
-	EnabledStandardFields []string `json:"enabled_standard_fields"`
+	ID                    int         `json:"id,omitempty" yaml:"id,omitempty"`
+	Name                  string      `json:"name,omitempty" yaml:"name,omitempty"`
+	DefaultStatus         IssueStatus `json:"default_status,omitempty" yaml:"default_status,omitempty"`
+	Description           string      `json:"description,omitempty" yaml:"description,omitempty"`
+	EnabledStandardFields []string    `json:"enabled_standard_fields,omitempty" yaml:"enabled_standard_fields,omitempty"`
 }
 
 type Trackers []Tracker
@@ -26,9 +26,9 @@ func (t *Trackers) Names() []string {
 	return v
 }
 
-func (r *Redmine) Trackers() (Trackers, error) {
+func (r *Redmine) Trackers(params ...Parameter) (Trackers, error) {
 
-	code, body, err := r.auth.Request("GET", "/trackers.json", nil)
+	code, body, err := r.auth.Request("GET", "/trackers.json"+ParseParameters(params...), nil)
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
@@ -38,7 +38,7 @@ func (r *Redmine) Trackers() (Trackers, error) {
 	}
 
 	v := struct {
-		Trackers []Tracker `json:"trackers"`
+		Trackers Trackers `json:"trackers"`
 	}{}
 
 	err = json.Unmarshal(body, &v)
@@ -47,4 +47,22 @@ func (r *Redmine) Trackers() (Trackers, error) {
 	}
 
 	return v.Trackers, nil
+}
+
+// TrackerWithName returns the Tracker with the given Name.
+// If no Tracker found with Name name, returns nil.
+func (r *Redmine) TrackerWithName(name string) (*Tracker, error) {
+
+	trks, err := r.Trackers(NameParameter(name))
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range trks {
+		if trks[i].Name == name {
+			return &trks[i], nil
+		}
+	}
+
+	return nil, nil
 }
