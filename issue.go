@@ -57,3 +57,34 @@ func (r *Redmine) Issue(id int) (*Issue, error) {
 
 	return &v.Issue, nil
 }
+
+// CreateIssue creates a new Issue.
+//
+// If Issue is created, the underlying data of iss will be replaced by the returned Issue.
+func (r *Redmine) CreateIssue(i *Issue) error {
+
+	ni := struct {
+		Issue *Issue `json:"issue"`
+	}{
+		Issue: i,
+	}
+
+	code, body, err := r.auth.Request("POST", "/issues.json", &ni)
+	if err != nil {
+		return fmt.Errorf("request failed: %w", err)
+	}
+
+	if code == 422 {
+		return fmt.Errorf("%w %s", ErrUnprocessableEntity, body)
+	}
+	if code != 201 {
+		return fmt.Errorf("(%d) %s", code, body)
+	}
+
+	err = json.Unmarshal(body, &ni)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	return nil
+}
